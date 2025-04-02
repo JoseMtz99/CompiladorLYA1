@@ -1,13 +1,22 @@
 package org.example.compilador;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
@@ -18,6 +27,7 @@ public class HelloApplication extends Application {
     private HBox hbPrincipal;
     private TextArea txtCodigoFuente, txtSalida;
     private MenuItem mitAbrirArchivo;
+    
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -35,6 +45,19 @@ public class HelloApplication extends Application {
 
     private void crearEntorno() {
         txtCodigoFuente = new TextArea();
+
+        txtCodigoFuente.textProperty().addListener(new ChangeListener<String>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
+            {
+
+                if (validartexto(newValue)) {
+                    txtCodigoFuente.setStyle();
+                };
+            }
+        });
+
         txtCodigoFuente.setPrefHeight(700);
         txtCodigoFuente.setPromptText("Codigo de fuente");
         txtSalida = new TextArea();
@@ -42,6 +65,17 @@ public class HelloApplication extends Application {
         vbLateral = new VBox();
         vbPrincipal = new VBox(txtCodigoFuente, txtSalida);
         hbPrincipal = new HBox(vbLateral, vbPrincipal);
+    }
+
+    private boolean validartexto(String texto) {
+        boolean valido = false;
+        String[] palabrasReservadas = {"if", "else", "while", "for", "int", "float", "return"};
+        for (String palabra : palabrasReservadas) {
+            if (texto.contains(palabra)) {
+                valido= true;
+            }else valido = false;
+        }
+        return valido;
     }
 
     private void crearMenuBar (){
