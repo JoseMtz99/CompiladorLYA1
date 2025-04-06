@@ -21,6 +21,7 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+
         crearMenuBar();
         crearEntorno();
         bdpPanel = new BorderPane();
@@ -42,6 +43,10 @@ public class HelloApplication extends Application {
         vbLateral = new VBox();
         vbPrincipal = new VBox(txtCodigoFuente, txtSalida);
         hbPrincipal = new HBox(vbLateral, vbPrincipal);
+    }
+    
+    private void metodoPrueba(){
+        int variablePORMISHUEVOS;
     }
 
     private void crearMenuBar (){
