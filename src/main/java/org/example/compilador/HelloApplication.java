@@ -8,15 +8,22 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+/*
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+ */
+
 import javafx.stage.FileChooser;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-
-
-
+import java.util.ArrayList;
+import java.util.List;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
@@ -26,6 +33,7 @@ public class HelloApplication extends Application {
     private VBox vbPrincipal, vbLateral;
     private HBox hbPrincipal;
     private TextArea txtCodigoFuente, txtSalida;
+    //private CodeArea codeArea;
     private MenuItem mitAbrirArchivo;
     private MenuItem mitGuardarArchivo;
 
@@ -56,6 +64,10 @@ public class HelloApplication extends Application {
         vbLateral = new VBox();
         vbPrincipal = new VBox(txtCodigoFuente, txtSalida);
         hbPrincipal = new HBox(vbLateral, vbPrincipal);
+        Button btnCompilar = new Button("Compilar");
+        btnCompilar.setOnAction(e -> compilarCodigo());
+        vbPrincipal = new VBox(txtCodigoFuente, btnCompilar, txtSalida);
+
     }
     
     private void abrirArchivo() {
@@ -121,6 +133,42 @@ public class HelloApplication extends Application {
         mnbCompilador = new MenuBar();
         mnbCompilador.getMenus().addAll(mnArchivo, mnEditar, mnVista, mnNavegacion, mnCodigo, mnConstruir, mnAjustes);
     }
+
+    private void compilarCodigo() {
+    txtSalida.clear();
+    String codigoFuente = txtCodigoFuente.getText();
+    List<String> tokens = separarEnTokens(codigoFuente);
+
+    txtSalida.appendText("Tokens encontrados:\n");
+    for (String token : tokens) {
+        txtSalida.appendText(token + "\n");
+    }
+
+    // Aquí luego puedes agregar verificación de AFDs y tabla de símbolos
+}
+
+private List<String> separarEnTokens(String codigo) {
+    List<String> tokens = new ArrayList<>();
+    
+    String[] lineas = codigo.split("\\n");
+    for (String linea : lineas) {
+        linea = linea.replaceAll("([=;()+\\-*/])", " $1 ");
+        String[] partes = linea.trim().split("\\s+");
+
+        for (String token : partes) {
+            if (!token.isEmpty()) {
+                tokens.add(token);
+            }
+        }
+    }
+    for (String token : tokens) {
+        txtSalida.appendText(token + "\n");
+    }
+    
+    return tokens;
+}
+
+
 
     public static void main(String[] args) {
         launch();
